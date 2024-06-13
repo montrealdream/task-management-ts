@@ -17,11 +17,11 @@ export const index = async (req: Request, res: Response): Promise<void> => {
             deleted: false
         }
 
-        // filter status
-        const listStatus: string[] = ["initial", "doing", "pending", "finish", "notFinish"];
-
+        // FILTER STATUS
+        const listStatus: string[] = ["initial", "doing", "pending", "finish", "notFinish"]; // use for validation
+ 
         if(req.query.status){
-            const status = `${req.query.status}`;
+            const status:string = `${req.query.status}`;
 
             if(listStatus.includes(`${status}`)){
                 
@@ -36,8 +36,32 @@ export const index = async (req: Request, res: Response): Promise<void> => {
                 return;
             }
         }
+        // END FILTER STATUS
+
+        // SORT CRITERIA
+        const objSort: any = {};
+        const listSort: string[] = ["asc", "desc"]; // use for validation
+
+        if(req.query.sortKey && req.query.sortValue){
+
+            const sortValue:string = `${req.query.sortValue}`;
+            if(listSort.includes(sortValue)){
+                objSort[`${req.query.sortKey}`] = sortValue;
+            }
+            else{
+                // 400 Bad Request: Request không hợp lệ
+                res.status(400).json({
+                    code: 400,
+                    message: "Request sort value không hợp lệ"
+                });
+                return;
+            }
+        }
+        // END SORT CRITERIA
         
-        const tasks = await Task.find(objFind).select('title content');
+        const tasks = await Task.find(objFind)
+                                .sort(objSort)
+                                .select('title content')
 
         // response json
         res.status(200).json({
