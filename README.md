@@ -1,4 +1,4 @@
-<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.herokuapp.com?font=&weight=700&size=25&pause=1000&random=false&width=435&lines=Project+Task+Management" alt="Typing SVG" /></a>
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.herokuapp.com?font=&weight=700&size=25&pause=1000&random=false&width=435&lines=Project+Task+Management Using Typescript" alt="Typing SVG" /></a>
 
 ## <a name="tech-stack">⚙️ Tech Stack</a>
 - Javascript
@@ -66,7 +66,7 @@ npm start
 
 ## <a name="links">🔗 Links</a>
 
-🔭 Refer my feature in project main [here](https://docs.google.com/spreadsheets/d/19bPK6oyP4AvDAFTD7q4FnE9KG610OlXtXOYcM3-TveA/edit?usp=sharing)
+🔭 Refer my feature in project main [here](https://docs.google.com/spreadsheets/d/1PNWsuqFxrgF-pX4G1a1IIw2iIoT5GxnKsnwkxsoOue0/edit?usp=sharing)
 
 🔭 Deploy project [here](https://hgt-1.vercel.app/)
 
