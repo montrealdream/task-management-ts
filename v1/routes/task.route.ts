@@ -7,6 +7,9 @@ const router: Router = express.Router();
 // controller
 import * as controller from "../controller/task.controller";
 
+// validate
+import * as validate from '../validate/task.validate';
+ 
 router.get(
     '/',
     controller.index
@@ -22,5 +25,10 @@ router.patch(
     controller.changeMultiStatus  
 );
 
+router.post(
+    '/create',
+    validate.create,
+    controller.create
+);
 
 export const taskRouter: Router = router;

@@ -230,3 +230,41 @@ export const changeMultiStatus = async (req: Request, res: Response): Promise<vo
         });
     }
 }
+
+// [POST] /api/v1/tasks/create
+export const create = async (req: Request, res: Response): Promise<void> => {
+    try{
+        interface interfaceNewTask {
+            title: string,
+            content?:string,
+            status: string,
+            taskParentId?: string,
+            createBy?:string, //tạm thời để thế này
+            listUserJoin?: string[]
+        }
+
+        const objNewTask: interfaceNewTask = {
+            title: req.body.title,
+            status: "initial"
+        }
+
+        const task = new Task(objNewTask);
+        await task.save();
+
+        res.status(200).json({
+            code: 200,
+            message: "Tạo mới một công việc thành công"
+        });
+    }
+    catch(error){
+
+    }
+}
+
+// [PATCH] /api/v1/tasks/edit/:taskId
+export const edit = async (req: Request, res: Response): Promise<void> => {
+    try{
+
+    }
+    catch(error){}
+}
