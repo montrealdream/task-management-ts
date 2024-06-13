@@ -42,4 +42,9 @@ router.patch(
     controller.deleteOne
 );
 
+router.patch(
+    '/deleteMulti',
+    controller.deleteMulti
+);
+
 export const taskRouter: Router = router;

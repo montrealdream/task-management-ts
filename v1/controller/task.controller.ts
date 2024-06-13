@@ -328,7 +328,7 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
-// [POST] /api/v1/tasks/deleteOne/:taskId
+// [PATCH] /api/v1/tasks/deleteOne/:taskId
 export const deleteOne = async (req: Request, res: Response): Promise<void> => {
     try{
         const taskId:string = req.params.taskId;
@@ -355,6 +355,38 @@ export const deleteOne = async (req: Request, res: Response): Promise<void> => {
         res.status(200).json({
             code: 200,
             message: "Đã xóa 1 công việc thành công"
+        });
+    }
+    catch(error){
+
+    }
+}
+
+// [PATCH] /api/v1/tasks/deleteMulti
+export const deleteMulti = async (req: Request, res: Response): Promise<void> => {
+    try{
+        const ids: string[] = req.body.ids;
+
+        for(const id of ids){
+            const task = await Task.findOne({_id: id});
+            if(!task){
+                res.status(400).json({
+                    code: 400,
+                    message: `ID: ${id} không hợp lệ`
+                });
+                return;
+            }
+        }
+
+        await Task.updateOne(
+            {id: {$in: ids}},{
+                deleted: true
+            }
+        );
+
+        res.status(200).json({
+            code: 200,
+            message: "Xóa nhiều task thành công"
         });
     }
     catch(error){
