@@ -13,24 +13,10 @@ const app:Express = express();
 
 const port: (number | string) = `${process.env.PORT}` || 3000; // (number | string) mean union type in typescript
 
-// model
-import Task from "./models/task.model";
+// version 1 Router
+import v1Router from "./v1/routes/index.route";
 
-app.get('/tasks', async (req: Request, res: Response) => {
-    try{
-        const task = await Task.find({
-            deleted: false
-        });
-
-        res.status(200).json({
-            code: 200,
-            message: "Lấy thông tin task thành công"
-        });
-    }
-    catch(error){
-        console.log(error);
-    }
-});
+v1Router(app);
 
 app.listen(port, () => {
     console.log(`App listening on port ${port}`);
