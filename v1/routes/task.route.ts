@@ -15,5 +15,12 @@ router.get(
 router.patch(
     '/change-status/:taskId',
     controller.changeStatus
-)
+);
+
+router.patch(
+    '/change-multi',
+    controller.changeMultiStatus  
+);
+
+
 export const taskRouter: Router = router;

@@ -111,14 +111,18 @@ export const index = async (req: Request, res: Response): Promise<void> => {
         });
     }
     catch(error){
-
+        console.log(error);
+        // 404 Not Found – Không tìm thấy resource từ URI
+        res.status(404).json({
+            code: 404,
+            message: "Đã xảy ra lỗi"
+        });
     }
 }
 
 // [PATCH] /api/v1/tasks/change-status/:taskId
 export const changeStatus = async(req: Request, res: Response): Promise<void> => {
     try{
-        // FILTER STATUS
         const listStatus: string[] = ["initial", "doing", "pending", "finish", "notFinish"]; // use for validation
 
         const taskId: string = req.params.taskId;
@@ -165,6 +169,64 @@ export const changeStatus = async(req: Request, res: Response): Promise<void> =>
          
     }
     catch(error){
+        console.log(error);
+        // 404 Not Found – Không tìm thấy resource từ URI
+        res.status(404).json({
+            code: 404,
+            message: "Đã xảy ra lỗi"
+        });
+    }
+}
 
+// [PATCH] /api/v1/tasks/change-multi
+export const changeMultiStatus = async (req: Request, res: Response): Promise<void> => {
+    try{
+        const listStatus: string[] = ["initial", "doing", "pending", "finish", "notFinish"]; // use for validation
+        
+        const ids:string[] = req.body.ids;
+        const status:string = req.body.status;
+
+        // is valid list id ?
+        for(let id of ids){
+            const task = await Task.findOne({_id: id, deleted: false});
+            if(!task){
+                // 400 Bad Request: Request không hợp lệ
+                res.status(400).json({
+                    code:400,
+                    message: `ID:${id} không hợp lệ`
+                });
+                return;
+            }
+        }
+
+        // is valid status task ?
+        if(!listStatus.includes(status)){
+            // 400 Bad Request: Request không hợp lệ
+            res.status(400).json({
+                code: 400,
+                message: "Trạng thái công việc không hợp lệ"
+            })
+            return;
+        }
+
+        // update
+        await Task.updateMany(
+            {_id: {$in: ids}}, {
+                status: status
+            }
+        );
+
+        res.status(200).json({
+            code: 200,
+            message: "Thay đổi trạng thái nhiều công việc thành công"
+        });
+    }
+    catch(error){
+        console.log(error);
+        // 404 Not Found – Không tìm thấy resource từ URI
+        res.status(404).json({
+            code: 404,
+            message: "Đã xảy ra lỗi"
+        });
     }
 }
