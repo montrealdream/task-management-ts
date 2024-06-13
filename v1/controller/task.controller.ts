@@ -58,16 +58,45 @@ export const index = async (req: Request, res: Response): Promise<void> => {
             }
         }
         // END SORT CRITERIA
+
+        // COUNT DOCUMENTS
+        const lengthOfDocuments:number = await Task.countDocuments(objFind);
+        // END COUNT DOCUMENTS
+
+        // PAGINATION
+        interface objPagination {
+            limit: number,
+            current: number,
+            skip?:number,
+            total?:number
+        }
+
+        const objPagination : objPagination = {
+            limit: 2, // default limit/page
+            current: 1
+        }
+        
+        if(req.query.page){
+            objPagination.current = parseInt(`${req.query.page}`);
+        }
+
+        objPagination["skip"] = (objPagination.current-1)*objPagination.limit;
+
+        objPagination["total"] = Math.ceil(lengthOfDocuments/objPagination.limit);
+        // END PAGINATION
         
         const tasks = await Task.find(objFind)
                                 .sort(objSort)
+                                .limit(objPagination.limit)
+                                .skip(objPagination.skip)
                                 .select('title content')
 
         // response json
         res.status(200).json({
             code: 200,
             message: "Đã lấy ra danh sách công việc",
-            tasks
+            tasks,
+            objPagination
         });
     }
     catch(error){
