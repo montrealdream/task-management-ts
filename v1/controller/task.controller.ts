@@ -317,10 +317,44 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
             {_id: taskId},
             req.body
         );
-        
+
         res.status(200).json({
             code: 200,
             message: "Chỉnh sửa công việc thành công"
+        });
+    }
+    catch(error){
+
+    }
+}
+
+// [POST] /api/v1/tasks/deleteOne/:taskId
+export const deleteOne = async (req: Request, res: Response): Promise<void> => {
+    try{
+        const taskId:string = req.params.taskId;
+
+        const task = await Task.findOne({
+            _id: taskId,
+            deleted: false
+        });
+
+        if(!task){
+            res.status(400).json({
+                code: 400,
+                message: "Id của task cần xóa không hợp lệ"
+            });
+            return;
+        }
+
+        await Task.updateOne(
+            {_id: taskId},{
+                deleted: true
+            }
+        )
+
+        res.status(200).json({
+            code: 200,
+            message: "Đã xóa 1 công việc thành công"
         });
     }
     catch(error){

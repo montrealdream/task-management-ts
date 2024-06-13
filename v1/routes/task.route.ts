@@ -37,4 +37,9 @@ router.patch(
     controller.edit
 );
 
+router.patch(
+    '/deleteOne/:taskId',
+    controller.deleteOne
+);
+
 export const taskRouter: Router = router;
