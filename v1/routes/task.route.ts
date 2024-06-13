@@ -31,4 +31,10 @@ router.post(
     controller.create
 );
 
+router.patch(
+    '/edit/:taskId',
+    validate.edit,
+    controller.edit
+);
+
 export const taskRouter: Router = router;

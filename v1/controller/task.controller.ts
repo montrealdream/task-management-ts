@@ -264,7 +264,66 @@ export const create = async (req: Request, res: Response): Promise<void> => {
 // [PATCH] /api/v1/tasks/edit/:taskId
 export const edit = async (req: Request, res: Response): Promise<void> => {
     try{
+        const taskId:string = req.params.taskId;
+
+        const taskNeededEdit = await Task.findOne({
+            _id: taskId,
+            deleted: false
+        });
+
+        if(!taskNeededEdit){
+            res.status(400).json({
+                code: 400,
+                message: "Id của task cần chỉnh sửa không hợp lệ"
+            });
+            return;
+        }
+
+        if(req.body.taskParentId){
+            // const task = await User.findOne({
+            //     _id: req.body.taskParentId,
+            //     deleted: false
+            // });
+
+            // if(!task){
+            //     res.status(400).json({
+            //         code: 400,
+            //         message: "Id task cha không hợp lệ"
+            //     });
+            //     return;
+            // }
+
+            // VÌ CHƯA CÓ MODEL USER NÊN CHƯA CHECK ĐƯỢC
+        }
+
+        if(req.body.listUserJoin){  
+            // for(const id of req.body.listUserJoin){
+            //     const task = await User
+            // }   
+            // VÌ CHƯA CÓ MODEL USER NÊN CHƯA CHECK ĐƯỢC
+        }
+
+        const listStatus: string[] = ["initial", "doing", "pending", "finish", "notFinish"]; // use for validation
+
+        if(!listStatus.includes(req.body.status)){
+            res.status(400).json({
+                code: 400,
+                message: "Trạng thái công việc không hợp lệ"
+            });
+            return;
+        }
+
+        await Task.updateOne(
+            {_id: taskId},
+            req.body
+        );
+        
+        res.status(200).json({
+            code: 200,
+            message: "Chỉnh sửa công việc thành công"
+        });
+    }
+    catch(error){
 
     }
-    catch(error){}
 }

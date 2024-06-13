@@ -84,4 +84,7 @@ export const edit = (req: Request, res: Response, next: NextFunction): void => {
         });
         return;
     }
+    
+    // next middlware 
+    next();
 }
