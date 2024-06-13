@@ -11,6 +11,7 @@ export const index = async (req: Request, res: Response): Promise<void> => {
         interface objFind {
             deleted: Boolean,
             status?: String,
+            title?: RegExp //keyword
         }
 
         const objFind: objFind = {
@@ -38,6 +39,15 @@ export const index = async (req: Request, res: Response): Promise<void> => {
         }
         // END FILTER STATUS
 
+        // KEYWORD
+        if(req.query.keyword){
+            const keyword: string = `${req.query.keyword}`;
+            const regex: RegExp = new RegExp(`${keyword}`, 'i');
+            objFind["title"] = regex;
+
+        }
+        // END KEYWORD
+        
         // SORT CRITERIA
         const objSort: any = {};
         const listSort: string[] = ["asc", "desc"]; // use for validation
