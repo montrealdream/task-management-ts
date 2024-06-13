@@ -69,7 +69,7 @@ export const index = async (req: Request, res: Response): Promise<void> => {
             current: number,
             skip?:number,
             total?:number
-        }
+        }   
 
         const objPagination : objPagination = {
             limit: 2, // default limit/page
