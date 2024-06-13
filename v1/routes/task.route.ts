@@ -12,4 +12,8 @@ router.get(
     controller.index
 );
 
+router.patch(
+    '/change-status/:taskId',
+    controller.changeStatus
+)
 export const taskRouter: Router = router;

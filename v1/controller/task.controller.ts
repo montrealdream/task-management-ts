@@ -5,6 +5,7 @@ import { Response , Request } from "express";
 import Task from "../models/task.model";
 import { stat } from "fs";
 
+// [GET] /api/v1/tasks
 export const index = async (req: Request, res: Response): Promise<void> => {
     try{
         // Create Interface for object Find
@@ -108,6 +109,60 @@ export const index = async (req: Request, res: Response): Promise<void> => {
             tasks,
             objPagination
         });
+    }
+    catch(error){
+
+    }
+}
+
+// [PATCH] /api/v1/tasks/change-status/:taskId
+export const changeStatus = async(req: Request, res: Response): Promise<void> => {
+    try{
+        // FILTER STATUS
+        const listStatus: string[] = ["initial", "doing", "pending", "finish", "notFinish"]; // use for validation
+
+        const taskId: string = req.params.taskId;
+        const status: string = req.body.status;
+
+        // is valid task id ?
+        const task = await Task.findOne({
+            _id: taskId,
+            deleted: false
+        });
+
+        if(!task){
+            // 400 Bad Request : request không hợp lệ
+            res.status(400).json({
+                code: 400,
+                message: "Task id không xác định, hãy kiểm tra lại"
+            });
+            return;
+        }
+
+        // is valid status task ?
+        if(!listStatus.includes(status)){
+            // 400 Bad Request : request không hợp lệ
+            res.status(400).json({
+                code: 400,
+                message: "Trạng thái công việc không hợp lệ"
+            });
+            return;
+        }
+
+        // update status's task
+        await Task.updateOne(
+            {_id: taskId},
+            {
+                status: status
+            }
+        );
+
+        // 200 OK – Trả về thành công cho những phương thức GET, PUT, PATCH hoặc DELETE.
+        res.status(200).json({
+            code: 200,
+            message: "Thay đổi trạng thái công việc thành công"
+        });
+         
     }
     catch(error){
 
