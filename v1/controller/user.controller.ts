@@ -8,15 +8,19 @@ const saltRounds = 10; // Typically a value between 10 and 12
 // model
 import User from "../models/user.model";
 
+// helper
+import * as generateHelper from "../helper/generate.helper";
+
 // [POST] /api/v1/user/register
 export const register = async (req: Request, res: Response): Promise<void> => {
     try{
         interface interfaceUser {
             fullName: string,
             email: string,
-            password?: string,
+            password: string,
             tel?: string
             avatar?:string
+            tokenUser:string
         }
 
         // is email exist ?
@@ -40,7 +44,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
             const objUser: interfaceUser = {
                 fullName: req.body.fullName,
                 email:req.body.email,
-                password: hash
+                password: hash,
+                tokenUser: generateHelper.RandomString(20)
             }
 
             const record = new User(objUser);
@@ -95,18 +100,28 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             if (result) {
                 // Passwords match, authentication successful
                 console.log('Passwords match! User authenticated.');
-            } else {
+                res.status(200).json({
+                    code: 200,
+                    message: "Đăng nhập thành công",
+                    tokenUser: user.tokenUser
+                });
+            } 
+            else {
                 // Passwords don't match, authentication failed
                 console.log('Passwords do not match! Authentication failed.');
+                res.status(400).json({
+                    code: 400,
+                    message: "Mật khẩu không chính xác"
+                });
             }
         });
 
-        res.status(200).json({
-            code: 200,
-            message: "Đăng nhập thành công"
-        });
+       
     }
     catch(error){
-
+        res.status(400).json({
+            code: 400,
+            message: "Xảy ra lỗi trong quá trình đăng nhập"
+        });
     }
 }
