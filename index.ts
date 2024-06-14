@@ -22,7 +22,7 @@ const port: (number | string) = `${process.env.PORT}` || 3000; // (number | stri
 
 app.use(cors());
 
-// parse application/json
+// parse application/jsons
 app.use(bodyParser.json());
 
 v1Router(app);
