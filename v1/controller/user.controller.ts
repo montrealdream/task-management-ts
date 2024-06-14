@@ -33,8 +33,6 @@ export const register = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        
-
         // hashing password with bcrypt
         const password: string = req.body.password;
         bcrypt.hash(password, saltRounds, async (err, hash): Promise<void> => {
@@ -52,6 +50,60 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         res.status(200).json({
             code: 200,
             message: "Tạo tài khoản thành công"
+        });
+    }
+    catch(error){
+
+    }
+}
+
+// [POST /api/v1/user/login
+export const login = async (req: Request, res: Response): Promise<void> => {
+    try{
+        // email is valid ?
+        const user = await User.findOne({
+            email: req.body.email,
+            deleted: false
+        });
+
+        if(!user){
+            res.status(400).json({
+                code: 400,
+                message: "Email không tồn tại"
+            });
+            return;
+        }
+
+        // user status is active ?
+        if(user.status != "active"){
+            res.status(400).json({
+                code: 400,
+                message: "Tài khoản đã bị khóa"
+            });
+            return;
+        }
+        
+        // password is valid
+        const password = req.body.password;
+        bcrypt.compare(password, (user.password || " "), (err, result) => {
+            if (err) {
+                // Handle error
+                console.error('Error comparing passwords:', err);
+                return;
+            }
+        
+            if (result) {
+                // Passwords match, authentication successful
+                console.log('Passwords match! User authenticated.');
+            } else {
+                // Passwords don't match, authentication failed
+                console.log('Passwords do not match! Authentication failed.');
+            }
+        });
+
+        res.status(200).json({
+            code: 200,
+            message: "Đăng nhập thành công"
         });
     }
     catch(error){
