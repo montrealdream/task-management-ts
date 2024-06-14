@@ -23,7 +23,7 @@ export const index = async (req: Request, res: Response): Promise<void> => {
         const listStatus: string[] = ["initial", "doing", "pending", "finish", "notFinish"]; // use for validation
  
         if(req.query.status){
-            const status:string = `${req.query.status}`;
+            const status: string = `${req.query.status}`;
 
             if(listStatus.includes(`${status}`)){
                 
